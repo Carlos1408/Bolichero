@@ -12,3 +12,117 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  lastname  String
+  email     String   @unique
+  password  String
+  role      String
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Publications Publication[]
+  Promotions   Promotion[]
+
+  Club   Club?   @relation(fields: [clubId], references: [id])
+  clubId String?
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  name      String
+  lastname  String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Comments Comment[]
+  Entries  Entry[]
+  Clubes   CustomersOnClubs[]
+}
+
+model Club {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Users        User[]
+  Publications Publication[]
+  Entries      Entry[]
+  Promotions   Promotion[]
+  Customers    CustomersOnClubs[]
+}
+
+model CustomersOnClubs {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+  Club       Club?     @relation(fields: [clubId], references: [id])
+  clubId     String?
+}
+
+model Entry {
+  id        String   @id @default(uuid())
+  datetime  DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+  Club       Club?     @relation(fields: [clubId], references: [id])
+  clubId     String?
+}
+
+model Publication {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  image       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  commentaries Comment[]
+
+  Club   Club?   @relation(fields: [clubId], references: [id])
+  clubId String?
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+model Promotion {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  expiration  DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Club   Club?   @relation(fields: [clubId], references: [id])
+  clubId String?
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+model Comment {
+  id          String   @id @default(uuid())
+  description String
+  type        String
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Customer      Customer?    @relation(fields: [customerId], references: [id])
+  customerId    String?
+  Publication   Publication? @relation(fields: [publicationId], references: [id])
+  publicationId String?
+}
