@@ -17,12 +17,20 @@ export class EntriesService {
     return this.entryRepository.save(entry);
   }
 
-  findAll() {
+  /*findAll() {
     return this.entryRepository.find({ relations: ['customer', 'club'] });
   }
 
   findOne(id: string) {
-    return this.entryRepository.findOne(id, { relations: ['customer', 'club'] });
+    return this.entryRepository.findOne(id, { relations: ['customer', 'club'] });//
+  }
+*/
+  findAll() {
+    return this.entryRepository.find(); // No incluye las relaciones
+  }
+  
+  findOne(id: string) {
+    return this.entryRepository.findOne({ where: { id } });  // Correcto
   }
 
   async update(id: string, updateEntryDto: UpdateEntryDto) {

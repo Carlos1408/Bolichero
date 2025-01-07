@@ -19,16 +19,16 @@ export class EntriesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.entriesService.findOne(+id);
+    return this.entriesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEntryDto: UpdateEntryDto) {
-    return this.entriesService.update(+id, updateEntryDto);
+    return this.entriesService.update(id, updateEntryDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.entriesService.remove(+id);
+    return this.entriesService.remove(id);
   }
 }
